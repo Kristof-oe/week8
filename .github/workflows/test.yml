@@ -8,11 +8,13 @@ on:
 
 jobs:
     Checkout:
-        runs-on: ubuntu:latest
+        runs-on: ubuntu-latest
         steps:
           - name: Checkout code
             uses: action/checkout@v4
-
+    Test:
+        runs-on: ubuntu-latest
+        steps:
           - name: Testing
             uses: actions/setup-node@v4
             with:
