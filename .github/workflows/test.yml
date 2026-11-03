@@ -21,7 +21,7 @@ jobs:
 
           - name: Install dependencies
             run: npm install
-            working-directory: .
+            working-directory: week8
 
           - name: Run tests
             run: npm test
