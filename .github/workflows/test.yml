@@ -29,16 +29,17 @@ jobs:
         run: echo "This is the branch ${{env.COMMIT_BRANCH}}"
 
       - name: Event1
-        if: ${{ env.COMMIT_EVENT == 'push'}}
+        if: env.COMMIT_EVENT == 'push'
         run: echo "This is the push event"
 
       - name: Event2
-        if: ${{ env.COMMIT_EVENT == 'pull_request'}}
+        if: env.COMMIT_EVENT == 'pull_request'
         run: echo "This is the pull event"
 
       - name: Event3
         if: contains(github.event.head_commit.message, '[skip-tests]')
         run: exit 1
+
       - name: Extra
         run: echo "This is the extra"  ${{ env.EXTRA_TAG || 'none' }}
 
@@ -60,5 +61,5 @@ jobs:
         working-directory: .
 
       - name: Step success
-        if: ${{  env.TEST_FLAG == true }}
+        if: env.TEST_FLAG == 'true'
         run: npm test
