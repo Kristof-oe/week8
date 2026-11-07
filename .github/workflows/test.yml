@@ -40,8 +40,7 @@ jobs:
         if: contains(github.event.head_commit.message, '[skip-tests]')
         run: exit 1
       - name: Extra
-        if: ${{ env.EXTRA_TAG || 'none' }}
-        run: echo "This is the extra"  ${{env.EXTRA_TAG}}
+        run: echo "This is the extra"  ${{ env.EXTRA_TAG || 'none' }}
 
   Test:
     needs: Display
