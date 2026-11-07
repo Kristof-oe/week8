@@ -41,7 +41,7 @@ jobs:
         run: exit 1
       - name: Extra
         if: ${{ env.EXTRA_TAG || 'none' }}
-        run: echo "This is the extra" env.EXTRA_TAG
+        run: echo "This is the extra"  ${{env.EXTRA_TAG}}
 
   Test:
     needs: Display
@@ -50,7 +50,7 @@ jobs:
       - name: Checkout_code
         uses: actions/checkout@v4
 
-      - name: ${{ vars.APP_NAME }}
+      - name: ${{ env.APP_NAME }}
         uses: actions/setup-node@v4
         with:
           node-version: ${{ vars.NODE_VERSION }}
