@@ -1,29 +1,65 @@
 name: Test React App
 
 on:
-    push:
-        branches: [main]
-    pull_request:
-        branches: [main]
+  push:
+    branches: [main]
+    paths:
+      - "/src/*"
+  pull_request:
+    branches: [main]
+    paths:
+      - "src/**"
+env:
+  COMMIT_SHA: ${{ github.sha }}
+  COMMIT_BRANCH: ${{ github.ref }}
+  COMMIT_EVENT: ${{ github.event_name }}
+  NODE_VERSION: 18
+  APP_NAME: "React app"
+  TEST_FLAG: true
+  EXTRA_TAG: 
 
 jobs:
-    Test:
-        runs-on: ubuntu-latest
-        steps:
-          - name: Checkout code
-            uses: actions/checkout@v4
+  Display:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Sha
+        run: echo "This is the sha ${{ env.COMMIT_SHA }}"
 
+      - name: Branch
+        run: echo "This is the branch ${{env.COMMIT_BRANCH}}"
 
-          - name: Node.js setup
-            uses: actions/setup-node@v4
-            with:
-                node-version: '18'
+      - name: Event1
+        if: ${{ env.COMMIT_EVENT == 'push'}}
+        run: echo "This is the push event"
 
-          - name: Install dependencies
-            run: npm install
-            working-directory: .
+      - name: Event2
+        if: ${{ env.COMMIT_EVENT == 'pull_request'}}
+        run: echo "This is the pull event"
 
-          - name: Run tests
-            run: npm test
-            
-            
+      - name: Event3
+        if: contains(github.event.head_commit.message, '[skip-tests]')
+        run: exit 1
+      - name: Extra
+        if: ${{ env.EXTRA_TAG || 'none' }}
+        run: echo "This is the extra" env.EXTRA_TAG
+
+  Test:
+    needs: Display
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout_code
+        uses: actions/checkout@v4
+
+      - name: ${{ vars.APP_NAME }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ vars.NODE_VERSION }}
+
+      - name: Install_dependencies
+        run: npm install
+        if: contains(github.event.head_commit.message, '[main]')
+        working-directory: .
+
+      - name: Step success
+        if: ${{  env.TEST_FLAG == true }}
+        run: npm test
